@@ -51,8 +51,8 @@ resource "aws_cloudfront_distribution" "s3_bucket_asset_prod" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    cache_policy_id  = "Managed-CachingOptimized"
-    origin_request_policy_id = "Managed-CORS-S3Origin"
+    cache_policy_id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    origin_request_policy_id = "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf"
     target_origin_id = "${var.production_origin_id}"
     viewer_protocol_policy = "redirect-to-https"
     
@@ -85,8 +85,8 @@ resource "aws_cloudfront_distribution" "s3_bucket_asset_stag" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    cache_policy_id  = "Managed-CachingOptimized"
-    origin_request_policy_id = "Managed-CORS-S3Origin"
+    cache_policy_id  = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    origin_request_policy_id = "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf"
     target_origin_id = "${var.staging_origin_id}"
     viewer_protocol_policy = "redirect-to-https"
     
