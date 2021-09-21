@@ -15,5 +15,5 @@ terraform {
   }
 
   module "s3" {
-      source = "./s3-setup"
+      source = "./aws-s3-cloudfront-iam-setup"
   }
