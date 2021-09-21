@@ -106,3 +106,72 @@ resource "aws_cloudfront_distribution" "s3_bucket_asset_stag" {
   }
 
 }
+
+resource "aws_iam_policy" "s3_bucket_asset_policy" {
+  name        = "s3_bucket_asset_policy"
+  
+  tags = {
+    project = "${var.tags}"
+  }
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    Statement = [
+      {
+        #Add actual policy
+        # Action = [
+        #   "ec2:Describe*",
+        # ]
+        # Effect   = "Allow"
+        # Resource = "*"
+      },
+    ]
+  })
+}
+
+resource "aws_iam_policy" "cloudfront_prod_policy" {
+  name        = "cloudfront_prod_policy"
+  
+  tags = {
+    project = "${var.tags}"
+  }
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    Statement = [
+      {
+        #Add actual policy
+        # Action = [
+        #   "ec2:Describe*",
+        # ]
+        # Effect   = "Allow"
+        # Resource = "*"
+      },
+    ]
+  })
+}
+
+resource "aws_iam_policy" "cloudfront_stag_policy" {
+  name        = "cloudfront_stag_policy"
+  
+  tags = {
+    project = "${var.tags}"
+  }
+
+  # Terraform's "jsonencode" function converts a
+  # Terraform expression result to valid JSON syntax.
+  policy = jsonencode({
+    Statement = [
+      {
+        #Add actual policy
+        # Action = [
+        #   "ec2:Describe*",
+        # ]
+        # Effect   = "Allow"
+        # Resource = "*"
+      },
+    ]
+  })
+}
