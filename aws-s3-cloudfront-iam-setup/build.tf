@@ -1,5 +1,9 @@
+################################################
+###### Create s3 Asset buckets #################
+################################################
+  
   resource "aws_s3_bucket" "s3_bucket_asset_prod" {
-      bucket        = "${var.prod_bucket_name}"
+      bucket        = "${var.prod_bucket_assets_name}"
       acl     = "${var.acl_value}"
       server_side_encryption_configuration {
         rule {
@@ -20,7 +24,7 @@
   }
 
     resource "aws_s3_bucket" "s3_bucket_asset_stag" {
-      bucket      = "${var.stag_bucket_name}"
+      bucket      = "${var.stag_bucket_assets_name}"
       acl   = "${var.acl_value}"
       server_side_encryption_configuration {
         rule {
@@ -38,6 +42,55 @@
         project = "${var.tags}"
       }
   }
+
+################################################
+###### Create s3 storage buckets ###############
+################################################
+
+  resource "aws_s3_bucket" "s3_bucket_prod" {
+      bucket        = "${var.prod_bucket_storage_name}"
+      acl     = "${var.acl_value}"
+      server_side_encryption_configuration {
+        rule {
+          apply_server_side_encryption_by_default {
+            sse_algorithm = "aws:kms"
+          }
+        }
+      }
+      cors_rule {
+        allowed_headers = ["*"]
+        allowed_methods = ["PUT", "POST", "GET"]
+        allowed_origins = ["*"]
+      }
+      tags = {
+        project = "${var.tags}"
+      } 
+
+  }
+
+    resource "aws_s3_bucket" "s3_bucket_stag" {
+      bucket      = "${var.stag_bucket_storage_name}"
+      acl   = "${var.acl_value}"
+      server_side_encryption_configuration {
+        rule {
+          apply_server_side_encryption_by_default {
+            sse_algorithm = "aws:kms"
+          }
+        }
+      }
+      cors_rule {
+        allowed_headers = ["*"]
+        allowed_methods = ["PUT", "POST", "GET"]
+        allowed_origins = ["*"]
+      }
+      tags = {
+        project = "${var.tags}"
+      }
+  }
+
+################################################
+###### Create CloudFront Distributions #########
+################################################
 
 resource "aws_cloudfront_distribution" "s3_bucket_asset_prod" {
   origin {
@@ -107,6 +160,10 @@ resource "aws_cloudfront_distribution" "s3_bucket_asset_stag" {
 
 }
 
+############################
+###### Add IAM policies ####
+############################
+
 resource "aws_iam_policy" "s3_bucket_asset_policy" {
   name        = "s3_bucket_asset_policy"
   
@@ -174,4 +231,39 @@ resource "aws_iam_policy" "cloudfront_stag_policy" {
       },
     ]
   })
+}
+
+########################
+###### Add IAM user ####
+########################
+
+resource "aws_iam_user" "client-project-iam" {
+  name = "client-project-iam"
+
+  tags = {
+    project = "${var.tags}"
+  }
+}
+
+resource "aws_iam_access_key" "client-project-iam" {
+  user = aws_iam_user.client-project-iam.name
+}
+
+#######################################
+###### Attach policies to IAM user ####
+#######################################
+
+resource "aws_iam_user_policy_attachment" "client-project-iam-attach-s3_bucket_asset_policy" {
+  user       = aws_iam_user.client-project-iam.name
+  policy_arn = aws_iam_policy.s3_bucket_asset_policy.arn
+}
+
+resource "aws_iam_user_policy_attachment" "client-project-iam-attach-cloudfront_prod_policy" {
+  user       = aws_iam_user.client-project-iam.name
+  policy_arn = aws_iam_policy.cloudfront_prod_policy.arn
+}
+
+resource "aws_iam_user_policy_attachment" "client-project-iam-attach-cloudfront_stag_policy" {
+  user       = aws_iam_user.client-project-iam.name
+  policy_arn = aws_iam_policy.cloudfront_stag_policy.arn
 }

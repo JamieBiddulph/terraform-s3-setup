@@ -1,14 +1,27 @@
-variable "stag_bucket_name" {
+variable "stag_bucket_assets_name" {
     description = "client-project-assets-staging"
     type = string
     default = "client-project-assets-staging"
 }
 
-variable "prod_bucket_name" {
+variable "prod_bucket_assets_name" {
     description = "client-project-assets-production"
     type = string
     default = "client-project-assets-production"
 }
+
+variable "stag_bucket_storage_name" {
+    description = "client-project-staging"
+    type = string
+    default = "client-project-staging"
+}
+
+variable "prod_bucket_storage_name" {
+    description = "client-project-production"
+    type = string
+    default = "client-project-production"
+}
+
 
 variable "tags" {
     description = "tag for items"
